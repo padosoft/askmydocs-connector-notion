@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Padosoft\AskMyDocsConnectorBase\BaseConnector;
+use Padosoft\AskMyDocsConnectorBase\Contracts\ConnectorIngestionContract;
 use Padosoft\AskMyDocsConnectorBase\Exceptions\ConnectorAuthException;
 use Padosoft\AskMyDocsConnectorBase\Exceptions\ConnectorPaginationLimitException;
 use Padosoft\AskMyDocsConnectorBase\HealthStatus;
@@ -38,7 +39,7 @@ use Padosoft\AskMyDocsConnectorNotion\Support\NotionPaginator;
  *     hit, GET /v1/blocks/{page_id}/children, recursively hydrate
  *     `has_children` nodes, then convert to markdown via
  *     {@see NotionBlockToMarkdown}. The markdown is written to the
- *     host's KB disk via the {@see \Padosoft\AskMyDocsConnectorBase\Contracts\ConnectorIngestionContract}.
+ *     host's KB disk via the {@see ConnectorIngestionContract}.
  *   - Incremental sync — same search but sorted by `last_edited_time`
  *     desc; client-side filter on `$since`. Notion does NOT have a
  *     delta endpoint or a deletion-event stream, so archived pages
@@ -321,6 +322,7 @@ class NotionConnector extends BaseConnector
                         }
                         if ($editedAt !== null && $editedAt->lessThanOrEqualTo($since)) {
                             $reachedWatermark = true;
+
                             continue;
                         }
                     }
@@ -335,6 +337,7 @@ class NotionConnector extends BaseConnector
                         if ($pageId !== '' && $this->softDeleteByMetadataKey($installation, 'notion_page_id', $pageId)) {
                             $removed++;
                         }
+
                         continue;
                     }
 
@@ -473,7 +476,7 @@ class NotionConnector extends BaseConnector
         }
 
         $notionFields = $this->extractNotionFields($page);
-        $sourceMeta = (new SourceAwareMetadataBuilder())->build(
+        $sourceMeta = (new SourceAwareMetadataBuilder)->build(
             base: [
                 'connector' => $this->key(),
                 'installation_id' => $installation->id,
@@ -581,16 +584,17 @@ class NotionConnector extends BaseConnector
     {
         $type = $prop['type'] ?? '';
         $value = $prop[$type] ?? null;
+
         return match ($type) {
             'select', 'status' => is_array($value) && isset($value['name']) ? (string) $value['name'] : null,
-            'multi_select'     => is_array($value)
+            'multi_select' => is_array($value)
                 ? array_values(array_filter(
                     array_map(static fn ($v) => is_array($v) && isset($v['name']) ? (string) $v['name'] : null, $value),
                     static fn ($v): bool => $v !== null,
                 ))
                 : [],
-            'date'             => is_array($value) ? ($value['start'] ?? null) : null,
-            'people'           => is_array($value)
+            'date' => is_array($value) ? ($value['start'] ?? null) : null,
+            'people' => is_array($value)
                 ? array_values(array_filter(array_map(
                     static fn ($p) => is_array($p) ? ($p['name'] ?? null) : null,
                     $value,
@@ -621,6 +625,7 @@ class NotionConnector extends BaseConnector
             return null;
         }
         $inactive = ['done', 'completed', 'archived', 'cancelled', 'canceled', 'closed'];
+
         return ! in_array(strtolower(trim($status)), $inactive, true);
     }
 

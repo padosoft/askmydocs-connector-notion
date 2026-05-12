@@ -35,7 +35,7 @@ final class NotionConnectorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->spy = new SpyIngestionContract();
+        $this->spy = new SpyIngestionContract;
         $this->app->instance(ConnectorIngestionContract::class, $this->spy);
         // Connector wires `Storage::disk('local')` for KB writes via
         // the spy's resolveKbSourcePath — fake it.

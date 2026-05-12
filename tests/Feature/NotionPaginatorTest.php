@@ -135,7 +135,7 @@ final class NotionPaginatorTest extends TestCase
         ));
     }
 
-    public function test_walkLazy_yields_one_batch_at_a_time(): void
+    public function test_walk_lazy_yields_one_batch_at_a_time(): void
     {
         Http::fake([
             'api.notion.com/v1/search' => Http::sequence()
@@ -162,7 +162,7 @@ final class NotionPaginatorTest extends TestCase
         $this->assertSame([['p1', 'p2'], ['p3']], $batches);
     }
 
-    public function test_walkLazy_allows_early_break_to_skip_remaining_network_calls(): void
+    public function test_walk_lazy_allows_early_break_to_skip_remaining_network_calls(): void
     {
         Http::fake([
             'api.notion.com/v1/search' => Http::sequence()

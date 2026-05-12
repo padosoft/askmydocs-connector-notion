@@ -23,7 +23,7 @@
         "illuminate/support": "^12.0|^13.0",
         "illuminate/http": "^12.0|^13.0",
         "illuminate/contracts": "^12.0|^13.0",
-        "padosoft/askmydocs-connector-base": "^1.1"
+        "padosoft/askmydocs-connector-base": "^1.1.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.0|^12.0",
@@ -64,15 +64,9 @@
     "prefer-stable": true,
     "repositories": [
         {
-            "_comment": "TODO(lorenzo): remove this entry once padosoft/askmydocs-connector-base v1.1.0 is live on Packagist. The path repo is only used during local dev before the base package's Packagist registration propagates.",
-            "type": "path",
-            "url": "../askmydocs-connector-base",
-            "options": {
-                "symlink": false,
-                "versions": {
-                    "padosoft/askmydocs-connector-base": "1.1.0"
-                }
-            }
+            "_comment": "TODO(lorenzo): remove this entry once padosoft/askmydocs-connector-base is live on Packagist. Until then CI resolves the base package directly from its GitHub VCS repo via the v1.1.1 tag.",
+            "type": "vcs",
+            "url": "https://github.com/padosoft/askmydocs-connector-base"
         }
     ]
 }
