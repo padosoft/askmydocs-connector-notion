@@ -185,8 +185,7 @@ class NotionConnector extends BaseConnector
         }
 
         $installation = $this->loadInstallation($installationId);
-        $config = (array) ($installation->config_json ?? []);
-        $projectKey = (string) ($config['project_key'] ?? ('connector-'.$this->key()));
+        $projectKey = $this->resolveProjectKey($installation);
 
         $workspaceId = (string) ($this->vault->getExtraKey($installationId, 'workspace_id') ?? 'workspace');
 
@@ -281,8 +280,7 @@ class NotionConnector extends BaseConnector
         }
 
         $installation = $this->loadInstallation($installationId);
-        $config = (array) ($installation->config_json ?? []);
-        $projectKey = (string) ($config['project_key'] ?? ('connector-'.$this->key()));
+        $projectKey = $this->resolveProjectKey($installation);
 
         $workspaceId = (string) ($this->vault->getExtraKey($installationId, 'workspace_id') ?? 'workspace');
 

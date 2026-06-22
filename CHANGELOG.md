@@ -4,6 +4,16 @@ All notable changes to `padosoft/askmydocs-connector-notion` will be documented 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] — 2026-06-22
+
+### Changed
+
+- Adopt `BaseConnector::resolveProjectKey()` from `padosoft/askmydocs-connector-base` v1.3 for multi-account / project-scoped ingestion. The connector now resolves the target project from the installation's explicit `project_key`, falling back to the host's `kb.ingest.default_project` config and finally the literal `default`. This replaces the previous synthetic `connector-<key>` fallback so multiple installations can bind to distinct projects.
+
+### Requires
+
+- `padosoft/askmydocs-connector-base` `^1.3`.
+
 ## v1.0.0 — Initial release (2026-05-12)
 
 Initial extraction from the AskMyDocs v4.5 inline connector framework into a standalone, reusable Laravel package.
